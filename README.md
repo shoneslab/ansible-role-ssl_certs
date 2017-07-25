@@ -1,5 +1,6 @@
 ssl_certs
 =========
+[![Build Status](https://travis-ci.org/shoneslab/ansible-role-ssl_certs.svg?branch=master)](https://travis-ci.org/shoneslab/ansible-role-ssl_certs)
 
 This ansible role is to create self signed ssl certs.
 
