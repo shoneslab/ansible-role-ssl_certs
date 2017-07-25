@@ -1,0 +1,8 @@
+---
+- name: installing Python dependency Modules
+  pip:
+    name: "{{ item }}"
+    state: "present"
+  become: true
+  with_items:
+    - 'pyOpenSSL'

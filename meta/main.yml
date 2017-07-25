@@ -1,0 +1,18 @@
+galaxy_info:
+  author: Shone Jacob
+  description: Install slf signed ssl cert
+  license: "license (BSD, MIT)"
+  min_ansible_version: 2.2
+  version: 0.0.1
+  platforms:
+  - name: Ubuntu
+    versions:
+     - trusty
+     - xenial
+     - yakkety
+
+  galaxy_tags:
+    - system
+    - 'ssl'
+
+dependencies: []

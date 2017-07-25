@@ -1,0 +1,7 @@
+---
+# tasks file for ansible-role-ssl_certs
+- include: prereq.yml
+  tags: prereq
+
+- include: generate.yml
+  tags: generate_ssl

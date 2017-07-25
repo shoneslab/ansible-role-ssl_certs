@@ -1,0 +1,87 @@
+---
+- name: create essential directories
+  file:
+    path: "{{ item }}"
+    state: directory
+    mode: 0755
+  become: true
+  with_items:
+    - "{{ ssl_certs_root_private_key_dir }}"
+    - "{{ ssl_certs_device_key_dir }}"
+
+- name: generate the root/private key
+  openssl_privatekey:
+    path: "{{ ssl_certs_root_private_key_dir }}/{{ ssl_certs_root_private_key }}"
+    size: "{{ ssl_certs_conf_default_bits }}"
+    state: present
+  become: true
+
+- name: generate openssl conf
+  template:
+    src: "openssl.cnf.j2"
+    dest: "{{ ssl_certs_root_private_key_dir }}/openssl.cnf"
+  become: true
+  tags: generate_openssl_conf
+
+- name: stat root cert
+  stat:
+    path: "{{ ssl_certs_root_private_key_dir }}/{{ ssl_certs_root_ssl_cert }}"
+  register: reg_stat_root_pem
+
+- name: create SSL cert and self sign the certficate (root)
+  command: >
+    openssl req
+    -x509
+    -new
+    -nodes
+    -key "{{ ssl_certs_root_private_key_dir }}/{{ ssl_certs_root_private_key }}"
+    -sha256
+    -days {{ ssl_certs_root_cert_days }}
+    -out "{{ ssl_certs_root_private_key_dir }}/{{ ssl_certs_root_ssl_cert }}"
+    -config "{{ ssl_certs_root_private_key_dir }}/openssl.cnf"
+  become: true
+  when: reg_stat_root_pem.stat.exists == False
+  register: reg_ssl_self_sign
+
+- name: generate device private key
+  openssl_privatekey:
+    path: "{{ ssl_certs_device_key_dir }}/{{ ssl_certs_device_key }}"
+    size: "{{ ssl_certs_conf_default_bits }}"
+    state: present
+  become: true
+
+- name: stat device csr
+  stat:
+    path: "{{ ssl_certs_device_key_dir }}/{{ ssl_certs_device_csr }}"
+  register: reg_stat_device_csr
+
+- name: generate the certificate signing request (CSR)
+  command: >
+    openssl req
+    -new
+    -key "{{ ssl_certs_device_key_dir }}/{{ ssl_certs_device_key }}"
+    -out "{{ ssl_certs_device_key_dir }}/{{ ssl_certs_device_csr }}"
+    -config "{{ ssl_certs_root_private_key_dir }}/openssl.cnf"
+  become: true
+  when: reg_stat_root_pem.stat.exists == False
+  tags: reg_device_csr
+
+- name: stat device cert
+  stat:
+    path: "{{ ssl_certs_device_key_dir }}/{{ ssl_certs_device_crt }}"
+  register: reg_stat_device_cert
+
+- name: create and sign the certificate signing request (CSR) with root key
+  command: >
+    openssl x509
+    -req
+    -in "{{ ssl_certs_device_key_dir }}/{{ ssl_certs_device_csr }}"
+    -CA "{{ ssl_certs_root_private_key_dir }}/{{ ssl_certs_root_ssl_cert }}"
+    -CAkey "{{ ssl_certs_root_private_key_dir }}/{{ ssl_certs_root_private_key }}"
+    -CAcreateserial
+    -out "{{ ssl_certs_device_key_dir }}/{{ ssl_certs_device_crt }}"
+    -days {{ ssl_certs_cert_days }}
+    -sha256
+  become: true
+  when: reg_stat_device_cert.stat.exists == False
+  tags: reg_device_crt

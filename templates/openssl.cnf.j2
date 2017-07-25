@@ -1,0 +1,22 @@
+[ req ]
+default_bits        = {{ ssl_certs_conf_default_bits }}      # RSA key size
+default_md          = {{ ssl_certs_conf_default_md }}        # MD to use, message digest algorithm
+default_keyfile     = {{ ssl_certs_conf_defauly_keyfile }}   # name of generated keys
+prompt              = {{ ssl_certs_conf_prompt }}            # Prompt for DN
+encrypt_key         = {{ ssl_certs_conf_encrypt_key }}       # Protect private key
+distinguished_name  = req_distinguished_name                 # DN template
+req_extensions      = v3_req                                 # Desired extensions
+
+[ req_distinguished_name ]
+countryName             = "{{ ssl_certs_conf_country_name }}"
+stateOrProvinceName     = "{{ ssl_certs_conf_state }}"
+localityName            = "{{ ssl_certs_conf_locality }}"
+postalCode              = "{{ ssl_certs_conf_postal_code }}"
+organizationName        = "{{ ssl_certs_conf_org_name }}"
+organizationalUnitName  = "{{ ssl_certs_conf_org_unit_name }}"
+commonName              = "{{ ssl_certs_conf_common_name }}"
+emailAddress            = "{{ ssl_certs_conf_email }}"
+
+[ v3_req ]
+basicConstraints = CA:FALSE
+keyUsage = nonRepudiation, digitalSignature, keyEncipherment
