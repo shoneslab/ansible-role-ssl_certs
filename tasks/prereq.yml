@@ -1,4 +1,14 @@
 ---
+- name: install dependency
+  apt:
+    pkg: "{{ item }}"
+    state: installed
+  become: true
+  with_items:
+    - 'python-pip'
+    - 'python-dev'
+    - 'python-openssl'
+
 - name: installing Python dependency Modules
   pip:
     name: "{{ item }}"
