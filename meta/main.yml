@@ -3,7 +3,7 @@ galaxy_info:
   description: Install self signed ssl certificate
   license: "license (BSD, MIT)"
   min_ansible_version: 2.2
-  version: 0.0.2
+  version: 0.0.3
   platforms:
   - name: Ubuntu
     versions:
