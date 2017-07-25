@@ -1,7 +1,7 @@
 ssl_certs
 =========
 
-This ansible role to create self signed ssl certs
+This ansible role is to create self signed ssl certs.
 
 Requirements
 ------------
@@ -10,7 +10,7 @@ This role requires Ansible 2.2 or higher and platform requirements are listed in
 
 Role Variables
 --------------
-csr conf file information
+csr config file information
 ```
 ssl_certs_conf_country_name: 'US'
 ssl_certs_conf_state: 'Georgia'
@@ -48,11 +48,11 @@ None
 
 Example Playbook
 ----------------
-
+```
 - hosts: all
   roles:
     - role: ansible-role-ssl_certs
-
+```
 License
 -------
 

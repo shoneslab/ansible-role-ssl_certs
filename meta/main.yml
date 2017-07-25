@@ -1,6 +1,6 @@
 galaxy_info:
   author: Shone Jacob
-  description: Install slf signed ssl cert
+  description: Install self signed ssl certificate
   license: "license (BSD, MIT)"
   min_ansible_version: 2.2
   version: 0.0.1
